@@ -138,7 +138,7 @@
 
         <br>
 
-        <button onclick="clearData()" class="btn btn-danger">Clear data</button>
+        <button onclick="clearDataAndReload()" class="btn btn-danger">Clear data</button>
     </div>
 
     <!-- Подключение Bootstrap 4 JS и Popper.js CDN (если требуется) -->
@@ -302,6 +302,14 @@ function sendRequest(inputId) {
         document.getElementById('imeiInput2').addEventListener('input', () => sendRequest('imeiInput2'));
         document.getElementById('imeiInput3').addEventListener('input', () => sendRequest('imeiInput3'));
         document.getElementById('imeiInput4').addEventListener('input', () => sendRequest('imeiInput4'));
+
+        function clearDataAndReload() {
+            // Вызываем функцию clearData для очистки данных
+            clearData();
+
+            // Перезагружаем страницу
+            location.reload();
+        }
     </script>
 
 </body>
