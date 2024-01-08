@@ -350,14 +350,31 @@ function sendRequest(inputId) {
         }
 
         // Добавленные события input для автоматической отправки POST запроса
-        document.getElementById('imeiInput1').addEventListener('input', () => sendRequest('imeiInput1'));
-        document.getElementById('imeiInput2').addEventListener('input', () => sendRequest('imeiInput2'));
-        document.getElementById('imeiInput3').addEventListener('input', () => sendRequest('imeiInput3'));
-        document.getElementById('imeiInput4').addEventListener('input', () => sendRequest('imeiInput4'));
-        document.getElementById('imeiInput5').addEventListener('input', () => sendRequest('imeiInput5'));
-        document.getElementById('imeiInput6').addEventListener('input', () => sendRequest('imeiInput6'));
-        document.getElementById('imeiInput7').addEventListener('input', () => sendRequest('imeiInput7'));
-        document.getElementById('imeiInput8').addEventListener('input', () => sendRequest('imeiInput8'));
+document.getElementById('imeiInput1').addEventListener('input', () => {
+    sendRequestAndFocus('imeiInput1', 'imeiInput2');
+});
+document.getElementById('imeiInput2').addEventListener('input', () => {
+    sendRequestAndFocus('imeiInput2', 'imeiInput3');
+});
+document.getElementById('imeiInput3').addEventListener('input', () => {
+    sendRequestAndFocus('imeiInput3', 'imeiInput4');
+});
+document.getElementById('imeiInput4').addEventListener('input', () => {
+    sendRequestAndFocus('imeiInput4', 'imeiInput5');
+});
+document.getElementById('imeiInput5').addEventListener('input', () => {
+    sendRequestAndFocus('imeiInput5', 'imeiInput6');
+});
+document.getElementById('imeiInput6').addEventListener('input', () => {
+    sendRequestAndFocus('imeiInput6', 'imeiInput7');
+});
+document.getElementById('imeiInput7').addEventListener('input', () => {
+    sendRequestAndFocus('imeiInput7', 'imeiInput8');
+});
+document.getElementById('imeiInput8').addEventListener('input', () => {
+    sendRequestAndFocus('imeiInput8', ''); // Последний элемент, не переходим на следующий
+});
+
 
         function clearDataAndReload() {
             // Вызываем функцию clearData для очистки данных
@@ -366,6 +383,16 @@ function sendRequest(inputId) {
             // Перезагружаем страницу
             location.reload();
         }
+
+        function sendRequestAndFocus(currentInputId, nextInputId) {
+    // Отправка запроса
+    sendRequest(currentInputId);
+
+    // Переход фокуса
+    if (nextInputId) {
+        document.getElementById(nextInputId).focus();
+    }
+}
     </script>
 
 </body>
