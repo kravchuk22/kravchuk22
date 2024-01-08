@@ -59,16 +59,41 @@
         display: none; /* Начальное состояние - скрыто */
         margin-left: 30px;
     }
+   
 
     @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
+
+    /* Стили для логин формы */
+        .login-form {
+            max-width: 400px;
+            margin: 0 auto;
+            margin-top: 50px;
+        }
+
     </style>
 </head>
 <body>
 
+    <div class="container login-form">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="validateLogin()">Login</button>
+        </form>
+    </div>
     <!-- Общий контейнер для стилей -->
+   
+    <div class="container" id="mainContent" style="display: none;">
     <div class="container">
         <div class="service-container">
             <label for="serviceSelect">Choose a service:</label>
@@ -84,6 +109,7 @@
             <div class="imei-item">
                 <label for="imeiInput1">IMEI 1:</label>
                 <input type="text" id="imeiInput1" placeholder="Enter the IMEI" class="form-control">
+                <input type="text" id="carrierInput1"  placeholder="Carrier is..." class="form-control" readonly>
                 <div class="loader" id="loader1"></div>
                 <div id="result1" style="display: none;"></div>
                 <div id="batchId1" style="display: none;"></div>
@@ -91,12 +117,14 @@
                 <div class="carrier-status-container">
                     <div id="carrier1"></div>
                     <div id="status1"></div>
+
                 </div>
             </div>
 
            <div class="imei-item">
                 <label for="imeiInput2">IMEI 2:</label>
                 <input type="text" id="imeiInput2" placeholder="Enter the IMEI" class="form-control">
+                <input type="text" id="carrierInput2"  placeholder="Carrier is..." class="form-control" readonly>
                 <div class="loader" id="loader2"></div>
                 <div id="result2" style="display: none;"></div>
                 <div id="batchId2" style="display: none;"></div>
@@ -110,6 +138,7 @@
             <div class="imei-item">
                 <label for="imeiInput3">IMEI 3:</label>
                 <input type="text" id="imeiInput3" placeholder="Enter the IMEI" class="form-control">
+                <input type="text" id="carrierInput3"  placeholder="Carrier is..." class="form-control" readonly>
                 <div class="loader" id="loader3"></div>
                 <div id="result3" style="display: none;"></div>
                 <div id="batchId3" style="display: none;"></div>
@@ -123,6 +152,7 @@
             <div class="imei-item">
                 <label for="imeiInput4">IMEI 4:</label>
                 <input type="text" id="imeiInput4" placeholder="Enter the IMEI" class="form-control">
+                <input type="text" id="carrierInput4"  placeholder="Carrier is..." class="form-control" readonly>
                 <div class="loader" id="loader4"></div>
                 <div id="result4" style="display: none;"></div>
                 <div id="batchId4" style="display: none;"></div>
@@ -135,6 +165,7 @@
                         <div class="imei-item">
                 <label for="imeiInput5">IMEI 5:</label>
                 <input type="text" id="imeiInput5" placeholder="Enter the IMEI" class="form-control">
+                <input type="text" id="carrierInput5"  placeholder="Carrier is..." class="form-control" readonly>
                 <div class="loader" id="loader5"></div>
                 <div id="result5" style="display: none;"></div>
                 <div id="batchId5" style="display: none;"></div>
@@ -148,6 +179,7 @@
            <div class="imei-item">
                 <label for="imeiInput6">IMEI 6:</label>
                 <input type="text" id="imeiInput6" placeholder="Enter the IMEI" class="form-control">
+                <input type="text" id="carrierInput6"  placeholder="Carrier is..." class="form-control" readonly>
                 <div class="loader" id="loader6"></div>
                 <div id="result6" style="display: none;"></div>
                 <div id="batchId6" style="display: none;"></div>
@@ -161,6 +193,7 @@
             <div class="imei-item">
                 <label for="imeiInput7">IMEI 7:</label>
                 <input type="text" id="imeiInput7" placeholder="Enter the IMEI" class="form-control">
+                <input type="text" id="carrierInput7"  placeholder="Carrier is..." class="form-control" readonly>
                 <div class="loader" id="loader7"></div>
                 <div id="result7" style="display: none;"></div>
                 <div id="batchId7" style="display: none;"></div>
@@ -174,6 +207,7 @@
             <div class="imei-item">
                 <label for="imeiInput8">IMEI 8:</label>
                 <input type="text" id="imeiInput8" placeholder="Enter the IMEI" class="form-control">
+                <input type="text" id="carrierInput8"  placeholder="Carrier is..." class="form-control" readonly>
                 <div class="loader" id="loader8"></div>
                 <div id="result8" style="display: none;"></div>
                 <div id="batchId8" style="display: none;"></div>
@@ -192,11 +226,51 @@
         <button onclick="clearDataAndReload()" class="btn btn-danger">Clear data</button>
     </div>
 
+</div>
     <!-- Подключение Bootstrap 4 JS и Popper.js CDN (если требуется) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
     <script>
+
+        function validateLogin() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+
+            // Простейшая проверка логина и пароля
+            if (username === "admin" && password === "123456") {
+                // Сохраняем информацию о входе в localStorage
+                localStorage.setItem("isLoggedIn", "true");
+                localStorage.setItem("username", username);
+
+                // Отображаем основной контент
+                document.getElementById("mainContent").style.display = "block";
+                
+                // Скрываем логин форму
+                document.querySelector(".login-form").style.display = "none";
+            } else {
+                alert("Неверные учетные данные. Попробуйте еще раз.");
+            }
+        }
+
+        // Добавленная функция для проверки сохраненной информации о входе
+        function checkLoginStatus() {
+            var isLoggedIn = localStorage.getItem("isLoggedIn");
+
+            if (isLoggedIn === "true") {
+                var username = localStorage.getItem("username");
+
+                // Отображаем основной контент
+                document.getElementById("mainContent").style.display = "block";
+                
+                // Скрываем логин форму
+                document.querySelector(".login-form").style.display = "none";
+            }
+        }
+
+        // Вызываем функцию проверки статуса входа при загрузке страницы
+        checkLoginStatus();
+
         const batchIds = {};  // Для хранения значений batchId
 
 function sendRequest(inputId) {
@@ -260,12 +334,24 @@ function sendRequest(inputId) {
             })
             .finally(() => {
                 // Скрываем loader после завершения запроса
-                loaderElement.style.display = 'none';
+                //loaderElement.style.display = 'none';
             });
         }
     }
 }
+
+function updateCarrierInput(inputId, carrierValue) {
+    const carrierInputId = `carrierInput${inputId[inputId.length - 1]}`;
+    const carrierInputElement = document.getElementById(carrierInputId);
+    if (carrierInputElement) {
+        carrierInputElement.value = carrierValue;
+    }
+}
+
+
         function getResultUntilSuccess(inputId) {
+            
+
             const currentBatchId = batchIds[inputId];  // Получаем сохраненный batchId
             if (!currentBatchId) {
                 alert("Пожалуйста, сначала отправьте запрос для получения batchId");
@@ -305,12 +391,15 @@ function sendRequest(inputId) {
                         const carrierValue = (data.orders[0].status === 'Failed') ? 'Failed' : (data.orders[0].result.CARRIER || data.orders[0].result.Carrier || 'No data on Carrier');
                         const formattedCarrierValue = carrierValue;
                         const statusValue = data.orders[0].status || 'Нет данных о status';
-                        document.getElementById(carrierDivId).innerText = `Carrier: ${formattedCarrierValue}`;
-                        //document.getElementById(statusDivId).innerText = `Status: ${statusValue}`;
-                        if (loaderElement.style.display = 'inline-block') {
-                                // Скрываем loader только если он не был показан ранее
+                        //document.getElementById(carrierDivId).innerText = `Carrier: ${formattedCarrierValue}`;
+                        updateCarrierInput(inputId, formattedCarrierValue); // Обновлено
                         loaderElement.style.display = 'none';
-                        }
+
+                        //document.getElementById(statusDivId).innerText = `Status: ${statusValue}`;
+                        //if (getComputedStyle(loaderElement).display === 'inline-block') {
+                                // Скрываем loader только если он не был показан ранее
+                        //loaderElement.style.display = 'none';
+                        //}
 
                         // Если статус не 'Success' и не 'Failed', повторяем checkStatus через 5 секунд
                         if (statusValue !== 'Success' && statusValue !== 'Failed') {
