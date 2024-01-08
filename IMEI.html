@@ -203,60 +203,68 @@ function sendRequest(inputId) {
     const loaderId = `loader${inputId[inputId.length - 1]}`;
     const loaderElement = document.getElementById(loaderId);
 
-    if (loaderElement.style.display !== 'none') {
-        // Показываем loader только если он не был скрыт ранее
-        loaderElement.style.display = 'inline-block';
+    const imeiInput = document.getElementById(inputId);
+    const imeiValue = imeiInput.value;
 
-        const serviceId = document.getElementById('serviceSelect').value;
-        const batchName = "Test";
-        const imei = document.getElementById(inputId).value;
-        const notify = true;
-        const apiKey = '7a680e78-8dfe-4abb-bc48-bfb159e02108';
+    // Проверяем, что введено ровно 15 символов
+    if (imeiValue.length === 15) {
+        if (loaderElement.style.display !== 'none') {
+            // Показываем loader только если он не был скрыт ранее
+            loaderElement.style.display = 'inline-block';
 
-        const apiUrl = 'https://api.deviceforensic.com/order';
+            const serviceId = document.getElementById('serviceSelect').value;
+            const batchName = "Test";
+            const imei = imeiValue; // Используем imeiValue вместо document.getElementById(inputId).value;
+            const notify = true;
+            const apiKey = '7a680e78-8dfe-4abb-bc48-bfb159e02108';
 
-        const requestBody = {
-            serviceId: parseInt(serviceId),
-            batchName: batchName,
-            imeis: [imei],
-            notify: notify
-        };
+            const apiUrl = 'https://api.deviceforensic.com/order';
 
-        fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'access-key': apiKey
-            },
-            body: JSON.stringify(requestBody)
-        })
-        .then(response => response.json())
-        .then(data => {
-            const resultDivId = `result${inputId[inputId.length - 1]}`;
-            const batchIdDivId = `batchId${inputId[inputId.length - 1]}`;
-            const loaderId = `loader${inputId[inputId.length - 1]}`;
+            const requestBody = {
+                serviceId: parseInt(serviceId),
+                batchName: batchName,
+                imeis: [imei],
+                notify: notify
+            };
 
-            if (data && data.batchId) {
-                document.getElementById(resultDivId).innerText = `Результат: ${JSON.stringify(data)}`;
-                document.getElementById(batchIdDivId).innerText = `batchId: ${data.batchId}`;
-                // Извлекаем значение batchId из ответа и сохраняем только его значение
-                batchIds[inputId] = data.batchId;
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'access-key': apiKey
+                },
+                body: JSON.stringify(requestBody)
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDivId = `result${inputId[inputId.length - 1]}`;
+                const batchIdDivId = `batchId${inputId[inputId.length - 1]}`;
+                const loaderId = `loader${inputId[inputId.length - 1]}`;
 
-                // Автоматически вызываем getResult после получения batchId
-                getResultUntilSuccess(inputId);
-            } else {
-                document.getElementById(resultDivId).innerText = `Ошибка: ${data.message}`;
-                document.getElementById(batchIdDivId).innerText = '';  // Очистка блока для вывода batchId при ошибке
-            }
-        })
-        .catch(error => {
-            console.error(`Произошла ошибка при запросе к API для IMEI ${imei}:`, error);
-        })
-        
+                if (data && data.batchId) {
+                    document.getElementById(resultDivId).innerText = `Результат: ${JSON.stringify(data)}`;
+                    document.getElementById(batchIdDivId).innerText = `batchId: ${data.batchId}`;
+                    // Извлекаем значение batchId из ответа и сохраняем только его значение
+                    batchIds[inputId] = data.batchId;
+
+                    // Автоматически вызываем getResult после получения batchId
+                    getResultUntilSuccess(inputId);
+                } else {
+                    document.getElementById(resultDivId).innerText = `Ошибка: ${data.message}`;
+                    document.getElementById(batchIdDivId).innerText = '';  // Очистка блока для вывода batchId при ошибке
+                }
+            })
+            .catch(error => {
+                console.error(`Произошла ошибка при запросе к API для IMEI ${imei}:`, error);
+            })
+            .finally(() => {
+                // Скрываем loader после завершения запроса
+                loaderElement.style.display = 'none';
+            });
+        }
     }
 }
-
         function getResultUntilSuccess(inputId) {
             const currentBatchId = batchIds[inputId];  // Получаем сохраненный batchId
             if (!currentBatchId) {
@@ -367,7 +375,7 @@ function sendRequest(inputId) {
             location.reload();
         }
 
-        
+
     </script>
 
 </body>
