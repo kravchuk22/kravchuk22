@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Отправка запросов к API</title>
+    <title>IMEI CHECKER</title>
 
     <!-- Подключение Bootstrap 4 CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -73,7 +73,7 @@
         <div class="service-container">
             <label for="serviceSelect">Choose a service:</label>
             <select id="serviceSelect" class="form-control">
-                <option value="40">40 Apple Simlock Check Only</option>
+                <option value="6">6 Apple GSX - IMEI or Serial Submission</option>
                 <option value="8">8 Samsung WorldWide</option>
                 <!-- Добавьте нужные варианты сервисов в дропдаун -->
             </select>
@@ -83,7 +83,7 @@
         <div class="imei-container">
             <div class="imei-item">
                 <label for="imeiInput1">IMEI 1:</label>
-                <input type="text" id="imeiInput1" placeholder="Введите IMEI" class="form-control">
+                <input type="text" id="imeiInput1" placeholder="Enter the IMEI" class="form-control">
                 <div class="loader" id="loader1"></div>
                 <div id="result1" style="display: none;"></div>
                 <div id="batchId1" style="display: none;"></div>
@@ -94,9 +94,9 @@
                 </div>
             </div>
 
- <div class="imei-item">
+           <div class="imei-item">
                 <label for="imeiInput2">IMEI 2:</label>
-                <input type="text" id="imeiInput2" placeholder="Введите IMEI" class="form-control">
+                <input type="text" id="imeiInput2" placeholder="Enter the IMEI" class="form-control">
                 <div class="loader" id="loader2"></div>
                 <div id="result2" style="display: none;"></div>
                 <div id="batchId2" style="display: none;"></div>
@@ -109,7 +109,7 @@
 
             <div class="imei-item">
                 <label for="imeiInput3">IMEI 3:</label>
-                <input type="text" id="imeiInput3" placeholder="Введите IMEI" class="form-control">
+                <input type="text" id="imeiInput3" placeholder="Enter the IMEI" class="form-control">
                 <div class="loader" id="loader3"></div>
                 <div id="result3" style="display: none;"></div>
                 <div id="batchId3" style="display: none;"></div>
@@ -122,7 +122,7 @@
 
             <div class="imei-item">
                 <label for="imeiInput4">IMEI 4:</label>
-                <input type="text" id="imeiInput4" placeholder="Введите IMEI" class="form-control">
+                <input type="text" id="imeiInput4" placeholder="Enter the IMEI" class="form-control">
                 <div class="loader" id="loader4"></div>
                 <div id="result4" style="display: none;"></div>
                 <div id="batchId4" style="display: none;"></div>
@@ -130,6 +130,57 @@
                 <div class="carrier-status-container">
                     <div id="carrier4"></div>
                     <div id="status4"></div>
+                </div>
+            </div>
+                        <div class="imei-item">
+                <label for="imeiInput5">IMEI 5:</label>
+                <input type="text" id="imeiInput5" placeholder="Enter the IMEI" class="form-control">
+                <div class="loader" id="loader5"></div>
+                <div id="result5" style="display: none;"></div>
+                <div id="batchId5" style="display: none;"></div>
+                <div id="resultBatch5" style="display: none;"></div>
+                <div class="carrier-status-container">
+                    <div id="carrier5"></div>
+                    <div id="status5"></div>
+                </div>
+            </div>
+
+           <div class="imei-item">
+                <label for="imeiInput6">IMEI 6:</label>
+                <input type="text" id="imeiInput6" placeholder="Enter the IMEI" class="form-control">
+                <div class="loader" id="loader6"></div>
+                <div id="result6" style="display: none;"></div>
+                <div id="batchId6" style="display: none;"></div>
+                <div id="resultBatch6" style="display: none;"></div>
+                <div class="carrier-status-container">
+                    <div id="carrier6"></div>
+                    <div id="status6"></div>
+                </div>
+            </div>
+
+            <div class="imei-item">
+                <label for="imeiInput7">IMEI 7:</label>
+                <input type="text" id="imeiInput7" placeholder="Enter the IMEI" class="form-control">
+                <div class="loader" id="loader7"></div>
+                <div id="result7" style="display: none;"></div>
+                <div id="batchId7" style="display: none;"></div>
+                <div id="resultBatch7" style="display: none;"></div>
+                <div class="carrier-status-container">
+                    <div id="carrier7"></div>
+                    <div id="status7"></div>
+                </div>
+            </div>
+
+            <div class="imei-item">
+                <label for="imeiInput8">IMEI 8:</label>
+                <input type="text" id="imeiInput8" placeholder="Enter the IMEI" class="form-control">
+                <div class="loader" id="loader8"></div>
+                <div id="result8" style="display: none;"></div>
+                <div id="batchId8" style="display: none;"></div>
+                <div id="resultBatch8" style="display: none;"></div>
+                <div class="carrier-status-container">
+                    <div id="carrier8"></div>
+                    <div id="status8"></div>
                 </div>
             </div>
             <!-- Аналогичные блоки для IMEI 2, 3, 4... -->
@@ -243,9 +294,10 @@ function sendRequest(inputId) {
                         document.getElementById(`batchId${inputId[inputId.length - 1]}`).style.display = 'none';
 
                         // Извлекаем значения Carrier и status из массива данных и выводим их
-                        const carrierValue = (data.orders[0].status === 'Failed') ? 'Failed' : (data.orders[0].result.Carrier || 'Нет данных о Carrier');
+                        const carrierValue = (data.orders[0].status === 'Failed') ? 'Failed' : (data.orders[0].result.CARRIER || data.orders[0].result.Carrier || 'No data on Carrier');
+                        const formattedCarrierValue = carrierValue;
                         const statusValue = data.orders[0].status || 'Нет данных о status';
-                        document.getElementById(carrierDivId).innerText = `Carrier: ${carrierValue}`;
+                        document.getElementById(carrierDivId).innerText = `Carrier: ${formattedCarrierValue}`;
                         //document.getElementById(statusDivId).innerText = `Status: ${statusValue}`;
                         if (loaderElement.style.display = 'inline-block') {
                                 // Скрываем loader только если он не был показан ранее
@@ -280,7 +332,7 @@ function sendRequest(inputId) {
         function clearData() {
             document.getElementById('serviceSelect').selectedIndex = 0;
 
-            const inputIds = ['imeiInput1', 'imeiInput2', 'imeiInput3','imeiInput4' ];
+            const inputIds = ['imeiInput1', 'imeiInput2', 'imeiInput3','imeiInput4', 'imeiInput5', 'imeiInput6', 'imeiInput7', 'imeiInput8' ];
             for (const inputId of inputIds) {
                 document.getElementById(inputId).value = '';
                 document.getElementById(`result${inputId[inputId.length - 1]}`).innerText = '';
@@ -302,6 +354,10 @@ function sendRequest(inputId) {
         document.getElementById('imeiInput2').addEventListener('input', () => sendRequest('imeiInput2'));
         document.getElementById('imeiInput3').addEventListener('input', () => sendRequest('imeiInput3'));
         document.getElementById('imeiInput4').addEventListener('input', () => sendRequest('imeiInput4'));
+        document.getElementById('imeiInput5').addEventListener('input', () => sendRequest('imeiInput5'));
+        document.getElementById('imeiInput6').addEventListener('input', () => sendRequest('imeiInput6'));
+        document.getElementById('imeiInput7').addEventListener('input', () => sendRequest('imeiInput7'));
+        document.getElementById('imeiInput8').addEventListener('input', () => sendRequest('imeiInput8'));
 
         function clearDataAndReload() {
             // Вызываем функцию clearData для очистки данных
