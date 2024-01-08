@@ -334,7 +334,7 @@ function sendRequest(inputId) {
             })
             .finally(() => {
                 // Скрываем loader после завершения запроса
-                //loaderElement.style.display = 'none';
+                loaderElement.style.display = 'none';
             });
         }
     }
@@ -393,13 +393,12 @@ function updateCarrierInput(inputId, carrierValue) {
                         const statusValue = data.orders[0].status || 'Нет данных о status';
                         //document.getElementById(carrierDivId).innerText = `Carrier: ${formattedCarrierValue}`;
                         updateCarrierInput(inputId, formattedCarrierValue); // Обновлено
-                        loaderElement.style.display = 'none';
 
                         //document.getElementById(statusDivId).innerText = `Status: ${statusValue}`;
-                        //if (getComputedStyle(loaderElement).display === 'inline-block') {
+                        if (getComputedStyle(loaderElement).display === 'inline-block') {
                                 // Скрываем loader только если он не был показан ранее
-                        //loaderElement.style.display = 'none';
-                        //}
+                        loaderElement.style.display = 'none';
+                        }
 
                         // Если статус не 'Success' и не 'Failed', повторяем checkStatus через 5 секунд
                         if (statusValue !== 'Success' && statusValue !== 'Failed') {
