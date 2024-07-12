@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Router Availability Checker</title>
+    <title>Internet Availability Checker</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,40 +23,26 @@
     </style>
 </head>
 <body>
-    <h1>Router Availability Checker</h1>
-    <button onclick="checkRouterStatus()">Check Router Status</button>
-    <div id="routerStatus" class="status"></div>
+    <h1>Internet Availability Checker</h1>
+    <input type="text" id="ipAddress" placeholder="Enter IP address to check">
+    <button onclick="checkInternetStatus()">Check Internet Status</button>
     <div id="internetStatus" class="status"></div>
 
     <script>
-        const ROUTER_IP = '185.120.147.6'; // Замените на IP адрес вашего роутера
-        const INTERNET_TEST_URL = 'http://www.google.com';
-
-        async function checkRouterStatus() {
-            const routerStatusElement = document.getElementById('routerStatus');
+        async function checkInternetStatus() {
+            const ipAddress = document.getElementById('ipAddress').value;
             const internetStatusElement = document.getElementById('internetStatus');
 
-            routerStatusElement.textContent = 'Checking router status...';
-            internetStatusElement.textContent = '';
-
-            try {
-                const routerResponse = await fetch(`http://${ROUTER_IP}`, { mode: 'no-cors' });
-                if (routerResponse) {
-                    routerStatusElement.textContent = 'Router is online';
-                    routerStatusElement.className = 'status online';
-                }
-            } catch (error) {
-                routerStatusElement.textContent = 'Router is offline';
-                routerStatusElement.className = 'status offline';
-                return;
-            }
-
             internetStatusElement.textContent = 'Checking internet access...';
+
             try {
-                const internetResponse = await fetch(INTERNET_TEST_URL, { mode: 'no-cors' });
-                if (internetResponse) {
+                const response = await fetch(`http://${ipAddress}/favicon.ico`, { method: 'HEAD', mode: 'no-cors' });
+                if (response) {
                     internetStatusElement.textContent = 'Internet is accessible';
                     internetStatusElement.className = 'status online';
+                } else {
+                    internetStatusElement.textContent = 'Internet is not accessible';
+                    internetStatusElement.className = 'status offline';
                 }
             } catch (error) {
                 internetStatusElement.textContent = 'Internet is not accessible';
