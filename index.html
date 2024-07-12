@@ -23,31 +23,43 @@
     </style>
 </head>
 <body>
-    <h1>Internet Availability Checker</h1>
+    <h1>Internet Availability Checker1</h1>
     <input type="text" id="ipAddress" placeholder="Enter IP address to check">
     <button onclick="checkInternetStatus()">Check Internet Status</button>
     <div id="internetStatus" class="status"></div>
 
     <script>
-        async function checkInternetStatus() {
+        function checkInternetStatus() {
             const ipAddress = document.getElementById('ipAddress').value;
             const internetStatusElement = document.getElementById('internetStatus');
 
             internetStatusElement.textContent = 'Checking internet access...';
 
-            try {
-                const response = await fetch(`http://${ipAddress}/favicon.ico`, { method: 'HEAD', mode: 'no-cors' });
-                if (response) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', `http://${ipAddress}/favicon.ico`, true);
+            xhr.timeout = 5000; // Устанавливаем таймаут 5 секунд
+
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 400) {
                     internetStatusElement.textContent = 'Internet is accessible';
                     internetStatusElement.className = 'status online';
                 } else {
                     internetStatusElement.textContent = 'Internet is not accessible';
                     internetStatusElement.className = 'status offline';
                 }
-            } catch (error) {
+            };
+
+            xhr.onerror = function () {
                 internetStatusElement.textContent = 'Internet is not accessible';
                 internetStatusElement.className = 'status offline';
-            }
+            };
+
+            xhr.ontimeout = function () {
+                internetStatusElement.textContent = 'Request timed out. Internet is not accessible';
+                internetStatusElement.className = 'status offline';
+            };
+
+            xhr.send();
         }
     </script>
 </body>
