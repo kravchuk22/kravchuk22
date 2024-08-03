@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload and Link Analysis</title>
+    <link href="https://cdn.jsdelivr.net/npm/uikit@3.15.4/dist/css/uikit.min.css" rel="stylesheet">
+    <style>
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .upload-area:hover {
+            background-color: #f3f4f6;
+        }
+        .upload-area.dragover {
+            background-color: #e5e7eb;
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-storage.js"></script>
+</head>
+<body>
+    <div class="uk-container uk-margin-top">
+        <h2 class="uk-heading-line uk-text-center"><span>File Upload and Link Analysis</span></h2>
+        <div class="upload-area uk-margin" id="upload-area">
+            Drag and drop a file here or click to upload
+        </div>
+        <input type="file" id="file-input" class="uk-hidden">
+        <div class="uk-margin">
+            <label for="url-input" class="uk-form-label">Enter URL</label>
+            <input type="text" id="url-input" class="uk-input" placeholder="Enter URL">
+        </div>
+        <button id="analyze-button" class="uk-button uk-button-primary uk-width-1-1">Analyze</button>
+        <progress id="upload-progress" class="uk-progress uk-hidden" value="0" max="100"></progress>
+    </div>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB3SJC3cTtPXawj6_Hy4mlRvKqWCRB0nIw",
+            authDomain: "interview-f571e.firebaseapp.com",
+            projectId: "interview-f571e",
+            storageBucket: "interview-f571e.appspot.com",
+            messagingSenderId: "926275237353",
+            appId: "1:926275237353:web:a69a6d8e8e6492f490c778",
+            measurementId: "G-0YTDKC4P81"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const storage = firebase.storage();
+
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file-input');
+        const progressBar = document.getElementById('upload-progress');
+
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        uploadArea.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (event) => {
+            event.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = event.dataTransfer.files;
+            if (files.length > 0) {
+                uploadFile(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                uploadFile(fileInput.files[0]);
+            }
+        });
+
+        const uploadFile = (file) => {
+            const storageRef = storage.ref(`uploads/${file.name}`);
+            const uploadTask = storageRef.put(file);
+
+            uploadTask.on('state_changed', (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                progressBar.value = progress;
+                progressBar.classList.remove('uk-hidden');
+            }, (error) => {
+                console.error('Upload failed:', error);
+                progressBar.classList.add('uk-hidden');
+            }, () => {
+                uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                    console.log('File available at', downloadURL);
+                    progressBar.classList.add('uk-hidden');
+                });
+            });
+        };
+
+        document.getElementById('analyze-button').addEventListener('click', () => {
+            const url = document.getElementById('url-input').value;
+            // Ваша логика анализа URL
+            alert(`Analyzing URL: ${url}`);
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.15.4/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.15.4/dist/js/uikit-icons.min.js"></script>
+</body>
+</html>
