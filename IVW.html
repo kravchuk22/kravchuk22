@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Upload and Link Analysis</title>
+    <title>File Upload and Link Analysis1</title>
     <link href="https://cdn.jsdelivr.net/npm/uikit@3.15.4/dist/css/uikit.min.css" rel="stylesheet">
     <style>
         .upload-area {
@@ -101,6 +101,7 @@
             }, () => {
                 uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
                     console.log('File available at', downloadURL);
+                    alert('File successfully uploaded and available at: ' + downloadURL);
                     progressBar.classList.add('uk-hidden');
                 });
             });
