@@ -20,6 +20,13 @@
         .upload-area.dragover {
             background-color: #e5e7eb;
         }
+        .file-info {
+            margin-top: 20px;
+        }
+        .file-info a {
+            display: block;
+            margin-top: 10px;
+        }
     </style>
     <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -28,7 +35,7 @@
 </head>
 <body>
     <div class="uk-container uk-margin-top">
-        <h2 class="uk-heading-line uk-text-center"><span>File Upload and Link Analysis2</span></h2>
+        <h2 class="uk-heading-line uk-text-center"><span>File Upload and Link Analysis1</span></h2>
         <div class="upload-area uk-margin" id="upload-area">
             Drag and drop a file here or click to upload
         </div>
@@ -39,6 +46,7 @@
         </div>
         <button id="analyze-button" class="uk-button uk-button-primary uk-width-1-1">Analyze</button>
         <progress id="upload-progress" class="uk-progress uk-hidden" value="0" max="100"></progress>
+        <div class="file-info" id="file-info"></div>
     </div>
 
     <script>
@@ -60,6 +68,7 @@
         const uploadArea = document.getElementById('upload-area');
         const fileInput = document.getElementById('file-input');
         const progressBar = document.getElementById('upload-progress');
+        const fileInfo = document.getElementById('file-info');
 
         uploadArea.addEventListener('click', () => {
             fileInput.click();
@@ -105,9 +114,36 @@
                     console.log('File available at', downloadURL);
                     alert('File successfully uploaded and available at: ' + downloadURL);
                     progressBar.classList.add('uk-hidden');
+                    saveFileInfo(file.name, downloadURL);
+                    displayFileInfo(file.name, downloadURL);
                 });
             });
         };
+
+        const saveFileInfo = (fileName, fileURL) => {
+            localStorage.setItem('uploadedFile', JSON.stringify({ name: fileName, url: fileURL }));
+        };
+
+        const displayFileInfo = (fileName, fileURL) => {
+            fileInfo.innerHTML = `
+                <p>Last uploaded file:</p>
+                <p><strong>${fileName}</strong></p>
+                <a href="${fileURL}" target="_blank">Download</a>
+                <button class="uk-button uk-button-danger" onclick="removeFileInfo()">Remove</button>
+            `;
+        };
+
+        const removeFileInfo = () => {
+            localStorage.removeItem('uploadedFile');
+            fileInfo.innerHTML = '';
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedFile = JSON.parse(localStorage.getItem('uploadedFile'));
+            if (savedFile) {
+                displayFileInfo(savedFile.name, savedFile.url);
+            }
+        });
 
         document.getElementById('analyze-button').addEventListener('click', () => {
             const url = document.getElementById('url-input').value;
